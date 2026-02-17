@@ -1,0 +1,51 @@
+@model FerreteriaWeb.Models.ProductoViewModel
+
+@{
+    ViewData["Title"] = "Nuevo Producto";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+
+                    <h4 class="mb-4 text-center fw-semibold">Nuevo Producto</h4>
+
+                    <form asp-action="Create" method="post">
+
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label"></label>
+                            <input asp-for="Nombre" class="form-control rounded-3" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Precio" class="form-label"></label>
+                            <input asp-for="Precio" class="form-control rounded-3" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Stock" class="form-label"></label>
+                            <input asp-for="Stock" class="form-control rounded-3" />
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="StockMinimo" class="form-label"></label>
+                            <input asp-for="StockMinimo" class="form-control rounded-3" />
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-dark rounded-3">
+                                Guardar Producto
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
