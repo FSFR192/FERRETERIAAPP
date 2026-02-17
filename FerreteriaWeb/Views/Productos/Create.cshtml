@@ -18,21 +18,25 @@
                         <div class="mb-3">
                             <label asp-for="Nombre" class="form-label"></label>
                             <input asp-for="Nombre" class="form-control rounded-3" />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Precio" class="form-label"></label>
                             <input asp-for="Precio" class="form-control rounded-3" />
+                            <span asp-validation-for="Precio" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Stock" class="form-label"></label>
                             <input asp-for="Stock" class="form-control rounded-3" />
+                            <span asp-validation-for="Stock" class="text-danger"></span>
                         </div>
 
                         <div class="mb-4">
                             <label asp-for="StockMinimo" class="form-label"></label>
                             <input asp-for="StockMinimo" class="form-control rounded-3" />
+                            <span asp-validation-for="StockMinimo" class="text-danger"></span>
                         </div>
 
                         <div class="d-grid">

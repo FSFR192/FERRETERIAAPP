@@ -8,6 +8,27 @@
 
 <div class="container mt-4">
 
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }   
+
+    @section Scripts {
+        <script>
+            // Cierra automáticamente las alertas después de 3 segundos
+            setTimeout(() => {
+                const alertNode = document.querySelector('.alert');
+                if (alertNode) {
+                    const alert = new bootstrap.Alert(alertNode);
+                    alert.close();
+                }
+            }, 3000);
+        </script>
+    }
+
     <!-- Encabezado -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>

@@ -60,6 +60,7 @@ namespace FerreteriaWeb.Controllers
                 $"api/productos/{producto.Id}", producto);
 
             if (response.IsSuccessStatusCode)
+            TempData["Success"] = "Producto actualizado correctamente.";
                 return RedirectToAction("Index");
 
             return View(producto);
@@ -87,6 +88,7 @@ namespace FerreteriaWeb.Controllers
             Console.WriteLine("ERROR: " + result);
 
             if (response.IsSuccessStatusCode)
+                TempData["Success"] = "Producto creado correctamente.";
                 return RedirectToAction("Index");
 
             Console.WriteLine(producto.Nombre);
@@ -104,6 +106,8 @@ namespace FerreteriaWeb.Controllers
 
             var response = await client.DeleteAsync($"api/productos/{id}");
 
+            if (response.IsSuccessStatusCode)
+                TempData["Success"] = "Producto eliminado correctamente.";
             return RedirectToAction("Index");
         }
 
