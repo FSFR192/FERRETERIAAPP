@@ -30,6 +30,45 @@ namespace FerreteriaWeb.Controllers
             return View(productos);
         }
 
+        //EDITAR PRODUCTO
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var client = _httpClientFactory.CreateClient("FerreteriaApi");
+
+            var response = await client.GetAsync($"api/productos/{id}");
+
+            if (!response.IsSuccessStatusCode)
+                return RedirectToAction("Index");
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var producto = JsonSerializer.Deserialize<ProductoViewModel>(json,
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+            return View(producto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(ProductoViewModel producto)
+        {
+            var client = _httpClientFactory.CreateClient("FerreteriaApi");
+            var response = await client.PutAsJsonAsync(
+                $"api/productos/{producto.Id}", producto);
+
+            if (response.IsSuccessStatusCode)
+                return RedirectToAction("Index");
+
+            return View(producto);
+        }
+
+        
+
+        //CREAR PRODUCTO
+        
         [HttpGet]
         public IActionResult Create()
         {
@@ -55,6 +94,17 @@ namespace FerreteriaWeb.Controllers
 
 
             return View(producto);
+        }
+
+        //ELIMINAR PRODUCTO
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var client = _httpClientFactory.CreateClient("FerreteriaApi");
+
+            var response = await client.DeleteAsync($"api/productos/{id}");
+
+            return RedirectToAction("Index");
         }
 
     }
