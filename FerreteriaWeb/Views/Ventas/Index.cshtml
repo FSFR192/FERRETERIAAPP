@@ -1,0 +1,60 @@
+@model List<FerreteriaWeb.Models.VentaViewModel>
+
+<div class="container mt-4">
+    <h2 class="mb-4">📋 Listado de Ventas</h2>
+
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Productos</th>
+                <th>Detalle</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var venta in Model)
+            {
+                <tr>
+                    <td>@venta.Id</td>
+                    <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>S/ @venta.Total.ToString("0.00")</td>
+                    <td>@venta.Detalles.Count item(s)</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-info"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#detalle-@venta.Id">
+                            Ver ▾
+                        </button>
+                    </td>
+                </tr>
+                <tr class="collapse" id="detalle-@venta.Id">
+                    <td colspan="5" class="bg-light">
+                        <table class="table table-sm table-bordered mb-0">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Precio Unit.</th>
+                                    <th>Cantidad</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var d in venta.Detalles)
+                                {
+                                    <tr>
+                                        <td>@d.Producto.Nombre</td>
+                                        <td>S/ @d.PrecioUnitario.ToString("0.00")</td>
+                                        <td>@d.Cantidad</td>
+                                        <td>S/ @((d.Cantidad * d.PrecioUnitario).ToString("0.00"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -17,7 +17,6 @@ namespace FerreteriaAPI.Controllers
         {
             _context = context;
         }
-
         [HttpPost]
         public async Task<IActionResult> CrearVenta([FromBody] VentaCreateDto ventaDto)
         {
@@ -28,12 +27,7 @@ namespace FerreteriaAPI.Controllers
 
             try
             {
-                var venta = new Venta
-                {
-                    Fecha = DateTime.Now,
-                    Total = 0
-                };
-
+                var venta = new Venta { Fecha = DateTime.Now, Total = 0 };
                 _context.Ventas.Add(venta);
                 await _context.SaveChangesAsync();
 
@@ -51,22 +45,21 @@ namespace FerreteriaAPI.Controllers
                     if (producto.Stock < d.Cantidad)
                     {
                         await transaction.RollbackAsync();
-                        return BadRequest($"Stock insuficiente para el producto {producto.Nombre}.");
+                        return BadRequest($"Stock insuficiente para {producto.Nombre}.");
                     }
 
-                    // Descontar stock
                     producto.Stock -= d.Cantidad;
 
                     var detalleVenta = new DetalleVenta
                     {
                         VentaId = venta.Id,
                         ProductoId = producto.Id,
+                        NombreProducto = producto.Nombre, // <- snapshot
                         Cantidad = d.Cantidad,
                         PrecioUnitario = producto.Precio
                     };
 
                     venta.Total += d.Cantidad * producto.Precio;
-
                     _context.DetallesVenta.Add(detalleVenta);
                 }
 
@@ -75,10 +68,10 @@ namespace FerreteriaAPI.Controllers
 
                 return Ok("Venta registrada exitosamente.");
             }
-            catch
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                return StatusCode(500, "Error al registrar la venta.");
+                return StatusCode(500, ex.InnerException?.Message ?? ex.Message);
             }
         }
 
@@ -99,15 +92,18 @@ namespace FerreteriaAPI.Controllers
                         PrecioUnitario = d.PrecioUnitario,
                         Producto = new ProductoDto
                         {
-                            Id = d.Producto.Id,
-                            Nombre = d.Producto.Nombre,
-                            Precio = d.Producto.Precio
+                            Id = d.ProductoId ?? 0,
+                            Nombre = !string.IsNullOrEmpty(d.NombreProducto)
+                                     ? d.NombreProducto
+                                     : d.Producto != null ? d.Producto.Nombre : "Producto eliminado",
+                            Precio = d.PrecioUnitario
                         }
                     }).ToList()
                 }).ToListAsync();
 
             return Ok(ventas);
         }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> ObtenerVenta(int id)

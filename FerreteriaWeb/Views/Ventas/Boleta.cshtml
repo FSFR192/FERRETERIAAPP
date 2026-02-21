@@ -1,0 +1,60 @@
+<div class="container mt-5" style="max-width: 480px;">
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-body p-4">
+
+            <div class="text-center mb-3">
+                <h5 class="fw-bold">🧾 Ferretería - Boleta de Venta</h5>
+                <small class="text-muted">@TempData["Boleta_Fecha"]</small>
+            </div>
+
+            <hr />
+
+            <table class="table table-borderless table-sm">
+                <thead class="text-muted small">
+                    <tr>
+                        <th>Producto</th>
+                        <th class="text-center">Cant.</th>
+                        <th class="text-end">P. Unit.</th>
+                        <th class="text-end">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@TempData["Boleta_Producto"]</td>
+                        <td class="text-center">@TempData["Boleta_Cantidad"]</td>
+                        <td class="text-end">S/ @TempData["Boleta_PrecioUnitario"]</td>
+                        <td class="text-end">S/ @TempData["Boleta_Total"]</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr />
+
+            <div class="d-flex justify-content-between fw-bold">
+                <span>TOTAL</span>
+                <span>S/ @TempData["Boleta_Total"]</span>
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+                <button onclick="window.print()" class="btn btn-outline-dark rounded-3">
+                    🖨️ Imprimir / Guardar PDF
+                </button>
+                <a asp-controller="Ventas" asp-action="Create" class="btn btn-dark rounded-3">
+                    Nueva Venta
+                </a>
+                <a asp-controller="Productos" asp-action="Index" class="btn btn-outline-secondary rounded-3">
+                    Ir al Inventario
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        @@media print {
+            header, footer, .btn { display: none !important; }
+        }
+    </style>
+}

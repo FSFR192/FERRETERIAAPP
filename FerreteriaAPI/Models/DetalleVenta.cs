@@ -8,8 +8,7 @@ namespace FerreteriaAPI.Models
         public int Id { get; set; }
         [Required]
         public int VentaId { get; set; }
-        [Required]
-        public int ProductoId { get; set; }
+        public int? ProductoId { get; set; }
         [Required]
         public int Cantidad { get; set; }
         [Required]
@@ -19,6 +18,7 @@ namespace FerreteriaAPI.Models
         public Venta Venta { get; set; }
 
         [ForeignKey("ProductoId")]
-        public Producto Producto { get; set; }
+        public Producto? Producto { get; set; }
+        public string NombreProducto { get; set; } // <- guardar snapshot
     }
 }

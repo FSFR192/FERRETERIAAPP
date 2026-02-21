@@ -12,14 +12,16 @@ namespace FerreteriaAPI.Data
 
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Venta> Ventas { get; set; }
-        public DbSet<DetalleVenta> DetallesVenta { get; set;}
+        public DbSet<DetalleVenta> DetallesVenta { get; set; }
 
-        protected override void OnModelCreating (ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Producto>()
-                .Property(p => p.Precio)
-                .HasColumnType("decimal(18,2)");
+        modelBuilder.Entity<DetalleVenta>()
+        .HasOne(d => d.Producto)
+        .WithMany()
+        .HasForeignKey(d => d.ProductoId)
+        .OnDelete(DeleteBehavior.SetNull); // Evita que se borre un producto si tiene detalles de venta asociados
         }
-            
+
     }
 }

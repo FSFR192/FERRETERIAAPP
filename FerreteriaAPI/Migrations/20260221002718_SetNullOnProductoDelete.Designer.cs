@@ -4,6 +4,7 @@ using FerreteriaAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FerreteriaAPI.Migrations
 {
     [DbContext(typeof(FerreteriaDbContext))]
-    partial class FerreteriaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260221002718_SetNullOnProductoDelete")]
+    partial class SetNullOnProductoDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

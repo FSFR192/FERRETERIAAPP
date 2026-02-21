@@ -1,3 +1,5 @@
+using FerreteriaWeb.Models;
+
 namespace FerreteriaWeb.Models
 {
     public class ProductoViewModel

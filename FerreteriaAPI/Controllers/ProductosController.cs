@@ -74,6 +74,12 @@ namespace FerreteriaAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Producto>> PostProducto(Producto producto)
         {
+            var existe = await _context.Productos
+                .AnyAsync(p => p.Nombre.ToLower() == producto.Nombre.ToLower());
+            if (existe)
+            {
+                return BadRequest($"El producto '{producto.Nombre}' ya existe.");
+            }
             _context.Productos.Add(producto);
             await _context.SaveChangesAsync();
 
