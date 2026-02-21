@@ -1,3 +1,5 @@
+using System.Diagnostics.Contracts;
+
 namespace FerreteriaWeb.Models
 {
     public class DetalleVentaViewModel

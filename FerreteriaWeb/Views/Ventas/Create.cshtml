@@ -1,6 +1,6 @@
 @model FerreteriaWeb.Models.CrearVentaViewModel
 
-<div class="container mt-5" style="max-width: 500px;">
+<div class="container mt-5" style="max-width: 600px;">
     <div class="card shadow-sm border-0 rounded-4">
         <div class="card-body p-4">
 
@@ -9,32 +9,98 @@
                 <div class="alert alert-danger">@TempData["Error"]</div>
             }
 
-            <h4 class="mb-4 text-center fw-light">
-                Registrar Venta
-            </h4>
+            <h4 class="mb-4 text-center fw-light">Registrar Venta</h4>
 
-            <form asp-action="Create" method="post">
+            <form id="formVenta">
 
                 <div class="mb-3">
-                    <label class="form-label small text-muted">Producto</label>
-                    <select asp-for="ProductoId" asp-items="ViewBag.Productos" class="form-select rounded-3">
-                        <option value="">-- Seleccione un producto --</option>
-                    </select>
+                    <label class="form-label small text-muted">Cliente</label>
+                    <input type="text" id="cliente" class="form-control rounded-3"     placeholder="Nombre del cliente" />
                 </div>
 
-                <div class="mb-4">
-                    <label class="form-label small text-muted">Cantidad</label>
-                    <input asp-for="Cantidad" class="form-control rounded-3" placeholder="Ingrese cantidad" />
+                <hr />
+                <p class="small text-muted">Productos</p>
+
+                <div id="listaProductos">
+                    <!-- filas de productos -->
                 </div>
 
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-dark rounded-3">
+                <button type="button" onclick="agregarFila()"   class="btn btn-outline-secondary btn-sm rounded-3 mb-3">
+                    + Agregar producto
+                </button>
+
+                <div class="d-grid mt-2">
+                    <button type="button" onclick="confirmarVenta()"    class="btn btn-dark rounded-3">
                         Confirmar Venta
                     </button>
                 </div>
 
             </form>
-
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        const productos = @Html.Raw(ViewBag.ProductosJson);
+        let filaIndex = 0;
+
+        function agregarFila() {
+            const opciones = `<option value="">-- Selecciona un producto --</option>` +
+        productos.map(p =>
+            `<option value="${p.id}">${p.nombre} - S/ ${p.precio.toFixed(2)}</option>`
+        ).join('');
+
+            const fila = `
+                <div class="row g-2 mb-2 fila-producto">
+                    <div class="col-7">
+                        <select class="form-select form-select-sm rounded-3 select-producto">
+                            ${opciones}
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="form-control form-control-sm rounded-3 input-cantidad" 
+                               value="1" min="1" placeholder="Cant." />
+                    </div>
+                    <div class="col-2">
+                        <button type="button" onclick="this.closest('.fila-producto').remove()" 
+                                class="btn btn-outline-danger btn-sm w-100">✕</button>
+                    </div>
+                </div>`;
+
+            document.getElementById('listaProductos').insertAdjacentHTML('beforeend', fila);
+            filaIndex++;
+        }
+
+        async function confirmarVenta() {
+            const cliente = document.getElementById('cliente').value || 'Sin nombre';
+            const filas = document.querySelectorAll('.fila-producto');
+
+            if (filas.length === 0) {
+                alert('Agrega al menos un producto.');
+                return;
+            }
+
+            const detalles = Array.from(filas).map(f => ({
+                productoId: parseInt(f.querySelector('.select-producto').value),
+                cantidad: parseInt(f.querySelector('.input-cantidad').value)
+            }));
+
+            const response = await fetch('/Ventas/ProcesarVenta', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cliente, detalles })
+            });
+
+            if (response.ok) {
+                window.location.href = await response.text();
+            } else {
+                const error = await response.text();
+                alert('Error: ' + error);
+            }
+        }
+
+        // Agregar primera fila al cargar
+        agregarFila();
+    </script>
+}

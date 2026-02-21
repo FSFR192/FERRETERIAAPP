@@ -1,3 +1,10 @@
+@{
+      var detallesJson = TempData["Boleta_Detalles"]?.ToString();
+    var detalles = string.IsNullOrEmpty(detallesJson)
+        ? new List<System.Text.Json.JsonElement>()
+        : System.Text.Json.JsonSerializer.Deserialize<List<System.Text.Json.JsonElement>>(detallesJson)!;
+}
+
 <div class="container mt-5" style="max-width: 480px;">
     <div class="card shadow border-0 rounded-4">
         <div class="card-body p-4">
@@ -5,6 +12,11 @@
             <div class="text-center mb-3">
                 <h5 class="fw-bold">🧾 Ferretería - Boleta de Venta</h5>
                 <small class="text-muted">@TempData["Boleta_Fecha"]</small>
+            </div>
+
+            <div class="mb-2">
+                <span class="text-muted small">Cliente:</span>
+                <strong> @TempData["Boleta_Cliente"]</strong>
             </div>
 
             <hr />
@@ -19,12 +31,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>@TempData["Boleta_Producto"]</td>
-                        <td class="text-center">@TempData["Boleta_Cantidad"]</td>
-                        <td class="text-end">S/ @TempData["Boleta_PrecioUnitario"]</td>
-                        <td class="text-end">S/ @TempData["Boleta_Total"]</td>
-                    </tr>
+                    @foreach (var d in detalles)
+                    {
+                        <tr>
+                            <td>@d.GetProperty("nombre").GetString()</td>
+                            <td class="text-center">@d.GetProperty("cantidad").GetInt32()</td>
+                            <td class="text-end">S/ @d.GetProperty("precio").GetDecimal().ToString("0.00")</td>
+                            <td class="text-end">S/ @d.GetProperty("subtotal").GetDecimal().ToString("0.00")</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
 
@@ -32,7 +47,7 @@
 
             <div class="d-flex justify-content-between fw-bold">
                 <span>TOTAL</span>
-                <span>S/ @TempData["Boleta_Total"]</span>
+                <span>S/ @detalles.Sum(d => d.GetProperty("subtotal").GetDecimal()).ToString("0.00")</span>
             </div>
 
             <div class="d-grid gap-2 mt-4">

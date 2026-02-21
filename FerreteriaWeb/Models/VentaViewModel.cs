@@ -8,13 +8,7 @@ namespace FerreteriaWeb.Models
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
         public decimal Total { get; set; }
+        public string Cliente { get; set; } = string.Empty;
         public List<DetalleVentaViewModel> Detalles { get; set; } = new List<DetalleVentaViewModel>();
-    }
-
-    // Para el formulario crear
-    public class CrearVentaViewModel
-    {
-        public int ProductoId { get; set; }
-        public int Cantidad { get; set; }
     }
 }

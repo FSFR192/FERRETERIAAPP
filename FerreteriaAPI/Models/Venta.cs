@@ -9,6 +9,7 @@ namespace FerreteriaAPI.Models
         public DateTimeOffset Fecha { get; set; }
         [Required]
         public decimal Total { get; set; }
+        public string Cliente { get; set; } = "Sin nombre";
 
         public ICollection<DetalleVenta> Detalles { get; set; }
     }

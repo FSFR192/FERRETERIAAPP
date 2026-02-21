@@ -27,7 +27,11 @@ namespace FerreteriaAPI.Controllers
 
             try
             {
-                var venta = new Venta { Fecha = DateTime.Now, Total = 0 };
+                var venta = new Venta { 
+                    Fecha = DateTime.Now,
+                    Total = 0,
+                    Cliente = ventaDto.Cliente
+                    };
                 _context.Ventas.Add(venta);
                 await _context.SaveChangesAsync();
 
