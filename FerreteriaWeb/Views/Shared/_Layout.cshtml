@@ -13,37 +13,33 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FerreteriaWeb</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent"               aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home"
+                               asp-action="Index">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Productos"
+                               asp-action="Index">Inventario</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" 
-                            asp-area="" asp-controller="Ventas" 
-                            asp-action="Create">
-                            Registrar Venta     
-                            </a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Ventas"
+                               asp-action="Create">Registrar Venta</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" 
-                               asp-area="" asp-controller="Productos" 
-                               asp-action="Index">
-                               Inventario
-                            </a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Ventas"
+                               asp-action="Index">Historial de Ventas</a>
                         </li>
+
+                        <!-- BOTÓN LOGOUT -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" 
-                               asp-area="" asp-controller="Ventas" 
-                               asp-action="Index">
-                               Historial de Ventas
+                            <a class="nav-link text-danger" asp-controller="Auth" asp-action="Logout">
+                                Cerrar sesión
                             </a>
                         </li>
                     </ul>
@@ -59,7 +55,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2026 - FerreteriaWeb - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 - FerreteriaWeb
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -68,9 +64,10 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <footer class="text-center mt-5 mb-3 text-muted small">
-        Sistema de Inventario - Ferreteria 
-        <br /> 
+        Sistema de Inventario - Ferreteria
+        <br />
         Desarrollado por Fernando Flores - 2026
     </footer>
 </body>
+
 </html>

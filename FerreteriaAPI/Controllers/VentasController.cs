@@ -27,11 +27,12 @@ namespace FerreteriaAPI.Controllers
 
             try
             {
-                var venta = new Venta { 
+                var venta = new Venta
+                {
                     Fecha = DateTime.Now,
                     Total = 0,
                     Cliente = ventaDto.Cliente
-                    };
+                };
                 _context.Ventas.Add(venta);
                 await _context.SaveChangesAsync();
 
@@ -90,6 +91,7 @@ namespace FerreteriaAPI.Controllers
                     Id = v.Id,
                     Fecha = v.Fecha,
                     Total = v.Total,
+                    Cliente = v.Cliente,
                     Detalles = v.Detalles.Select(d => new DetalleVentaDto
                     {
                         Cantidad = d.Cantidad,
@@ -288,7 +290,9 @@ namespace FerreteriaAPI.Controllers
 
                 worksheet.Cell(fila, 1).Value = d.Venta.Fecha.ToString("yyyy-MM-dd");
                 worksheet.Cell(fila, 2).Value = d.VentaId;
-                worksheet.Cell(fila, 3).Value = d.Producto.Nombre;
+                worksheet.Cell(fila, 3).Value = !string.IsNullOrEmpty(d.NombreProducto)
+                ? d.NombreProducto
+                 : d.Producto != null ? d.Producto.Nombre : "Producto eliminado";
                 worksheet.Cell(fila, 4).Value = d.Cantidad;
                 worksheet.Cell(fila, 5).Value = d.PrecioUnitario;
                 worksheet.Cell(fila, 6).Value = totalLinea;

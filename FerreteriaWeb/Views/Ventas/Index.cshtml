@@ -8,6 +8,7 @@
             <tr>
                 <th>ID</th>
                 <th>Fecha</th>
+                <th>Cliente</th>
                 <th>Total</th>
                 <th>Productos</th>
                 <th>Detalle</th>
@@ -19,6 +20,7 @@
                 <tr>
                     <td>@venta.Id</td>
                     <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@(string.IsNullOrEmpty(venta.Cliente) ? "Sin nombre" : venta.Cliente)</td>
                     <td>S/ @venta.Total.ToString("0.00")</td>
                     <td>@venta.Detalles.Count item(s)</td>
                     <td>
@@ -30,31 +32,89 @@
                     </td>
                 </tr>
                 <tr class="collapse" id="detalle-@venta.Id">
-                    <td colspan="5" class="bg-light">
-                        <table class="table table-sm table-bordered mb-0">
-                            <thead class="table-secondary">
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Precio Unit.</th>
-                                    <th>Cantidad</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var d in venta.Detalles)
-                                {
+                    <td colspan="6" class="bg-light">
+                        <div class="p-2">
+                            <p class="mb-2 small text-muted">
+                                Cliente: <strong>@(string.IsNullOrEmpty(venta.Cliente) ? "Sin nombre" : venta.Cliente)</strong>
+                            </p>
+                            <table class="table table-sm table-bordered mb-2">
+                                <thead class="table-secondary">
                                     <tr>
-                                        <td>@d.Producto.Nombre</td>
-                                        <td>S/ @d.PrecioUnitario.ToString("0.00")</td>
-                                        <td>@d.Cantidad</td>
-                                        <td>S/ @((d.Cantidad * d.PrecioUnitario).ToString("0.00"))</td>
+                                        <th>Producto</th>
+                                        <th>Precio Unit.</th>
+                                        <th>Cantidad</th>
+                                        <th>Subtotal</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach (var d in venta.Detalles)
+                                    {
+                                        <tr>
+                                            <td>@d.Producto.Nombre</td>
+                                            <td>S/ @d.PrecioUnitario.ToString("0.00")</td>
+                                            <td>@d.Cantidad</td>
+                                            <td>S/ @((d.Cantidad * d.PrecioUnitario).ToString("0.00"))</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot class="fw-bold">
+                                    <tr>
+                                        <td colspan="3" class="text-end">TOTAL</td>
+                                        <td>S/ @venta.Total.ToString("0.00")</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <button onclick="imprimirComprobante(@venta.Id, '@venta.Cliente', '@venta.Fecha.ToString("dd/MM/yyyy HH:mm")', @venta.Total.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture))"
+                                    class="btn btn-sm btn-outline-dark">
+                                🖨️ Imprimir comprobante
+                            </button>
+                        </div>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+
+@section Scripts {
+<script>
+function imprimirComprobante(id, cliente, fecha, total) {
+    const filas = document.querySelectorAll(`#detalle-${id} tbody tr`);
+    let filasHtml = '';
+    filas.forEach(f => { filasHtml += f.outerHTML; });
+
+    const ventana = window.open('', '_blank');
+    ventana.document.write(`
+        <html>
+        <head>
+            <title>Comprobante #${id}</title>
+            <style>
+                body { font-family: Arial, sans-serif; max-width: 400px; margin: 20px auto; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ddd; padding: 6px; font-size: 13px; }
+                th { background: #f0f0f0; }
+                .total { font-weight: bold; }
+                h3 { text-align: center; }
+                .info { margin-bottom: 10px; font-size: 13px; }
+            </style>
+        </head>
+        <body>
+            <h3>🧾 Ferretería - Comprobante</h3>
+            <div class="info"><b>N°:</b> ${id}</div>
+            <div class="info"><b>Fecha:</b> ${fecha}</div>
+            <div class="info"><b>Cliente:</b> ${cliente || 'Sin nombre'}</div>
+            <table>
+                <thead>
+                    <tr><th>Producto</th><th>P.Unit.</th><th>Cant.</th><th>Subtotal</th></tr>
+                </thead>
+                <tbody>${filasHtml}</tbody>
+            </table>
+            <p class="total" style="text-align:right">TOTAL: S/ ${total.toFixed(2)}</p>
+            <script>window.print();<\/script>
+        </body>
+        </html>
+    `);
+    ventana.document.close();
+}
+</script>
+}

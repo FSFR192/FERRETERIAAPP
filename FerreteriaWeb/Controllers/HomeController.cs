@@ -1,25 +1,53 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using FerreteriaWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FerreteriaWeb.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
+    private readonly HttpClient _httpClient;
     private readonly ILogger<HomeController> _logger;
 
     public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;
+        _httpClient = new HttpClient();
+        _httpClient.BaseAddress = new Uri("http://localhost:5248/api/");
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
-    }
+        try
+        {
+            var diaResp = await _httpClient.GetAsync("Ventas/resumen-diario");
+            var mesResp = await _httpClient.GetAsync("Ventas/Resumen-mensual");
 
-    public IActionResult Privacy()
-    {
+            var diaJson = await diaResp.Content.ReadAsStringAsync();
+            var mesJson = await mesResp.Content.ReadAsStringAsync();
+
+            var dia = JsonSerializer.Deserialize<JsonElement>(diaJson);
+            var mes = JsonSerializer.Deserialize<JsonElement>(mesJson);
+
+            ViewBag.VentasHoy = dia.GetProperty("totalVentas").GetInt32();
+            ViewBag.IngresosHoy = dia.GetProperty("montoTotal").GetDecimal().ToString("0.00");
+            ViewBag.VentasMes = mes.GetProperty("totalVentas").GetInt32();
+            ViewBag.IngresosMes = mes.GetProperty("montoTotal").GetDecimal().ToString("0.00");
+            ViewBag.MesActual = System.Globalization.CultureInfo.CurrentCulture
+                .DateTimeFormat.GetMonthName(DateTime.Now.Month);
+        }
+        catch
+        {
+            ViewBag.VentasHoy = 0;
+            ViewBag.IngresosHoy = "0.00";
+            ViewBag.VentasMes = 0;
+            ViewBag.IngresosMes = "0.00";
+            ViewBag.MesActual = DateTime.Now.ToString("MMMM");
+        }
+
         return View();
     }
 

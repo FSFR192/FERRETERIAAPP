@@ -1,8 +1,99 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-4">
+
+    <h4 class="mb-4 fw-light">📊 Resumen del negocio</h4>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body text-center p-4">
+                    <div class="fs-1 mb-2">🛒</div>
+                    <div class="fs-2 fw-bold">@ViewBag.VentasHoy</div>
+                    <div class="text-muted small">Ventas hoy</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body text-center p-4">
+                    <div class="fs-1 mb-2">💰</div>
+                    <div class="fs-2 fw-bold">S/ @ViewBag.IngresosHoy</div>
+                    <div class="text-muted small">Ingresos hoy</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body text-center p-4">
+                    <div class="fs-1 mb-2">📦</div>
+                    <div class="fs-2 fw-bold">@ViewBag.VentasMes</div>
+                    <div class="text-muted small">Ventas en @ViewBag.MesActual</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body text-center p-4">
+                    <div class="fs-1 mb-2">📈</div>
+                    <div class="fs-2 fw-bold">S/ @ViewBag.IngresosMes</div>
+                    <div class="text-muted small">Ingresos en @ViewBag.MesActual</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <h6 class="fw-bold mb-3">📥 Exportar reporte mensual en Excel</h6>
+            <div class="row g-2 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Mes</label>
+                    <select id="mesSel" class="form-select rounded-3">
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            var nombre = new DateTime(2000, i, 1).ToString("MMMM");
+                            if (i == DateTime.Now.Month)
+                            {
+                                <option value="@i" selected>@nombre</option>
+                            }
+                            else
+                            {
+                                <option value="@i">@nombre</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Año</label>
+                    <input type="number" id="anioSel" class="form-control rounded-3" value="@DateTime.Now.Year"
+                           min="2024" max="2030" />
+                </div>
+                <div class="col-md-3">
+                    <a id="btnExportar"
+                           href="http://localhost:5248/api/Ventas/exportar?Mes=@DateTime.Now.Month&Año=@DateTime.Now.Year"
+                           class="btn btn-dark rounded-3 w-100">
+                        ⬇️ Descargar Excel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+@section Scripts {
+    <script>
+        function actualizarLink() {
+            const mes = document.getElementById('mesSel').value;
+            const anio = document.getElementById('anioSel').value;
+            document.getElementById('btnExportar').href =
+                `http://localhost:5248/api/Ventas/exportar?Mes=${mes}&Año=${anio}`;
+        }
+
+        document.getElementById('mesSel').addEventListener('change', actualizarLink);
+        document.getElementById('anioSel').addEventListener('change', actualizarLink);
+    </script>
+}
