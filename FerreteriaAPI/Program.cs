@@ -38,11 +38,9 @@ var app = builder.Build();
 app.UseCors("ReactPolicy");
 
 // Pipeline
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI();
-}
 
 app.UseAuthorization();
 app.MapControllers();
