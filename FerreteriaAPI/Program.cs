@@ -32,7 +32,7 @@ if (!string.IsNullOrEmpty(host))
 builder.Services.AddDbContext<FerreteriaDbContext>(options =>
 {
     var connectionString =
-        builder.Configuration["ConnectionStrings:DefaultConnection"];
+        Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
 
     options.UseMySql(
         connectionString,
