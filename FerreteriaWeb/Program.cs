@@ -8,7 +8,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpClient("FerreteriaApi", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5248/");
+    var apiUrl = builder.Configuration["ApiBaseUrl"];
+    client.BaseAddress = new Uri(apiUrl);
 });
 
 // Identity con SQLite
