@@ -10,17 +10,36 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// =========================
 // MySQL + EF Core
+// =========================
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Si existen variables de entorno (Railway), las usamos
+var host = Environment.GetEnvironmentVariable("MYSQLHOST");
+var port = Environment.GetEnvironmentVariable("MYSQLPORT");
+var database = Environment.GetEnvironmentVariable("MYSQLDATABASE");
+var username = Environment.GetEnvironmentVariable("MYSQLUSER");
+var password = Environment.GetEnvironmentVariable("MYSQLPASSWORD");
+
+if (!string.IsNullOrEmpty(host))
+{
+    connectionString =
+        $"server={host};port={port};database={database};user={username};password={password}";
+}
+
 builder.Services.AddDbContext<FerreteriaDbContext>(options =>
 {
     options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(
-            builder.Configuration.GetConnectionString("DefaultConnection")
-        )
+        connectionString,
+        ServerVersion.AutoDetect(connectionString)
     );
 });
 
+// =========================
+// CORS
+// =========================
 
 builder.Services.AddCors(options =>
 {
@@ -37,10 +56,8 @@ var app = builder.Build();
 
 app.UseCors("ReactPolicy");
 
-// Pipeline
-
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseAuthorization();
 app.MapControllers();
