@@ -11,12 +11,13 @@ public class HomeController : Controller
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<HomeController> _logger;
+    private readonly IConfiguration _configuration;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
     {
         _logger = logger;
         _httpClient = new HttpClient();
-        _httpClient.BaseAddress = new Uri("http://localhost:5248/api/");
+        _httpClient.BaseAddress = new Uri(configuration["ApiBaseUrl"] ?? "http://localhost:5248/api/");
     }
 
     public async Task<IActionResult> Index()

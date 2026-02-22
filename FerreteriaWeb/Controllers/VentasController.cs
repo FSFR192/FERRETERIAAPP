@@ -6,11 +6,12 @@ using FerreteriaWeb.Models;
 public class VentasController : Controller
 {
     private readonly HttpClient _httpClient;
+    private readonly IConfiguration _configuration;
 
-    public VentasController(IHttpClientFactory httpClientFactory)
+    public VentasController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
         _httpClient = new HttpClient();
-        _httpClient.BaseAddress = new Uri("http://localhost:5248/api/");
+        _httpClient.BaseAddress = new Uri(configuration["ApiBaseUrl"] ?? "http://localhost:5248/api/");
     }
 
     public async Task<IActionResult> Create()
