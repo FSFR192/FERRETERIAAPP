@@ -16,13 +16,18 @@ public class HomeController : Controller
     public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
     {
         _logger = logger;
+        _configuration = configuration;
+        var apiUrl = configuration["ApiBaseUrl"] ?? "https://ferreteriaapp-production.up.railway.app/api/";
         _httpClient = new HttpClient();
-        _httpClient.BaseAddress = new Uri(configuration["ApiBaseUrl"] ?? "http://localhost:5248/api/");
+        _httpClient.BaseAddress = new Uri(apiUrl);
     }
 
     public async Task<IActionResult> Index()
     {
-            ViewBag.ApiBaseUrl = _configuration["ApiBaseUrl"]?.TrimEnd('/');
+        var apiBase = _configuration["ApiBaseUrl"]?.TrimEnd('/')
+                          ?? "https://ferreteriaapp-production.up.railway.app/api";
+        ViewBag.ApiBaseUrl = apiBase;
+        
         try
         {
             var diaResp = await _httpClient.GetAsync("Ventas/resumen-diario");
