@@ -10,8 +10,10 @@ public class VentasController : Controller
 
     public VentasController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
+        _configuration = configuration;
+        var apiUrl = configuration["ApiBaseUrl"] ?? "https://ferreteriaapp-production.up.railway.app/api/";
         _httpClient = new HttpClient();
-        _httpClient.BaseAddress = new Uri(configuration["ApiBaseUrl"] ?? "http://localhost:5248/api/");
+        _httpClient.BaseAddress = new Uri(apiUrl.EndsWith("/") ? apiUrl : apiUrl + "/");
     }
 
     public async Task<IActionResult> Create()
