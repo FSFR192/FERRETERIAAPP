@@ -61,6 +61,8 @@ public class VentasController : Controller
         }
 
         TempData["Boleta_Cliente"] = request.Cliente;
+        var zonaPerú = TimeZoneInfo.FindSystemTimeZoneById("America/Lima");
+        var horaPerú = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zonaPerú);
         TempData["Boleta_Fecha"] = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
         TempData["Boleta_Detalles"] = JsonSerializer.Serialize(boletaDetalles);
 
