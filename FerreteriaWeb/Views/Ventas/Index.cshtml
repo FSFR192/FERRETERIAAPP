@@ -19,7 +19,7 @@
             {
                 <tr>
                     <td>@venta.Id</td>
-                    <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@venta.Fecha.AddHours(-5).ToString("dd/MM/yyyy HH:mm")</td>
                     <td>@(string.IsNullOrEmpty(venta.Cliente) ? "Sin nombre" : venta.Cliente)</td>
                     <td>S/ @venta.Total.ToString("0.00")</td>
                     <td>@venta.Detalles.Count item(s)</td>
@@ -64,7 +64,7 @@
                                     </tr>
                                 </tfoot>
                             </table>
-                            <button onclick="imprimirComprobante(@venta.Id, '@venta.Cliente', '@venta.Fecha.ToString("dd/MM/yyyy HH:mm")', @venta.Total.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture))"
+                            <button onclick="imprimirComprobante(@venta.Id, '@venta.Cliente', '@venta.Fecha.AddHours(-5).ToString("dd/MM/yyyy HH:mm")', @venta.Total.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture))"
                                     class="btn btn-sm btn-outline-dark">
                                 🖨️ Imprimir comprobante
                             </button>
