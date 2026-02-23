@@ -61,7 +61,7 @@ public class VentasController : Controller
         }
 
         TempData["Boleta_Cliente"] = request.Cliente;
-        TempData["Boleta_Fecha"] = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+        TempData["Boleta_Fecha"] = $"UTC: {DateTime.UtcNow:HH:mm} | Lima: {DateTime.UtcNow.AddHours(-5):HH:mm}";
         TempData["Boleta_Detalles"] = JsonSerializer.Serialize(boletaDetalles);
 
         return Ok("/Ventas/Boleta");
