@@ -73,7 +73,7 @@
                 </div>
                 <div class="col-md-3">
                     <a id="btnExportar"
-                           href="http://localhost:5248/api/Ventas/exportar?Mes=@DateTime.Now.Month&Año=@DateTime.Now.Year"
+                           href="@ViewBag.ApiBaseUrl/Ventas/exportar?Mes=@DateTime.Now.Month&Año=@DateTime.Now.Year"
                            class="btn btn-dark rounded-3 w-100">
                         ⬇️ Descargar Excel
                     </a>
@@ -90,7 +90,7 @@
             const mes = document.getElementById('mesSel').value;
             const anio = document.getElementById('anioSel').value;
             document.getElementById('btnExportar').href =
-                `http://localhost:5248/api/Ventas/exportar?Mes=${mes}&Año=${anio}`;
+                `@ViewBag.ApiBaseUrl/Ventas/exportar?Mes=${mes}&Año=${anio}`;
         }
 
         document.getElementById('mesSel').addEventListener('change', actualizarLink);

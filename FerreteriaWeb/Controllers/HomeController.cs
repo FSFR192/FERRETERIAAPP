@@ -22,6 +22,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
+            ViewBag.ApiBaseUrl = _configuration["ApiBaseUrl"]?.TrimEnd('/');
         try
         {
             var diaResp = await _httpClient.GetAsync("Ventas/resumen-diario");
