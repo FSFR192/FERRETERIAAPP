@@ -60,7 +60,7 @@ public class VentasController : Controller
             });
         }
 
-        TempData["Boleta_Fecha"] = DateTime.UtcNow.AddHours(-5).ToString("dd/MM/yyyy HH:mm");
+        TempData["Boleta_Cliente"] = request.Cliente;
         TempData["Boleta_Fecha"] = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
         TempData["Boleta_Detalles"] = JsonSerializer.Serialize(boletaDetalles);
 
