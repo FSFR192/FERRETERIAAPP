@@ -170,17 +170,30 @@ namespace FerreteriaAPI.Controllers
         [HttpGet("resumen-diario")]
         public async Task<IActionResult> ResumenDia()
         {
-            var ahora = DateTime.UtcNow.AddHours(-5); // Ajuste a hora local (UTC-5)
-            var hoy = ahora.Date;
-            var mañana = hoy.AddDays(1);
+            var tz = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
+
+            var ahoraPeru = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, tz);
+
+            var inicioDiaPeru = new DateTimeOffset(
+                ahoraPeru.Year,
+                ahoraPeru.Month,
+                ahoraPeru.Day,
+                0, 0, 0,
+                ahoraPeru.Offset
+            );
+
+            var finDiaPeru = inicioDiaPeru.AddDays(1);
+
+            var inicioUtc = inicioDiaPeru.ToUniversalTime();
+            var finUtc = finDiaPeru.ToUniversalTime();
 
             var ventasHoy = await _context.Ventas
-                .Where(v => v.Fecha >= hoy && v.Fecha < mañana)
+                .Where(v => v.Fecha >= inicioUtc && v.Fecha < finUtc)
                 .ToListAsync();
 
             var resumen = new ResumenDiaDto
             {
-                Fecha = hoy,
+                Fecha = inicioDiaPeru.Date,
                 TotalVentas = ventasHoy.Count,
                 MontoTotal = ventasHoy.Sum(v => v.Total)
             };
@@ -207,19 +220,31 @@ namespace FerreteriaAPI.Controllers
         [HttpGet("Resumen-mensual")]
         public async Task<IActionResult> ResumenMes()
         {
-            var ahora = DateTime.UtcNow.AddHours(-5); // Ajuste a hora local (UTC-5)    
-            var hoy = DateTime.Today;
-            var inicioMes = new DateTime(hoy.Year, hoy.Month, 1);
-            var siguienteMes = inicioMes.AddMonths(1);
+            var tz = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
+
+            var ahoraPeru = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, tz);
+
+            var inicioMesPeru = new DateTimeOffset(
+                ahoraPeru.Year,
+                ahoraPeru.Month,
+                1,
+                0, 0, 0,
+                ahoraPeru.Offset
+            );
+
+            var finMesPeru = inicioMesPeru.AddMonths(1);
+
+            var inicioUtc = inicioMesPeru.ToUniversalTime();
+            var finUtc = finMesPeru.ToUniversalTime();
 
             var ventasMes = await _context.Ventas
-                .Where(v => v.Fecha.AddHours(-5) >= inicioMes && v.Fecha.AddHours(-5) < siguienteMes)
+                .Where(v => v.Fecha >= inicioUtc && v.Fecha < finUtc)
                 .ToListAsync();
 
             var resultado = new
             {
-                Mes = hoy.Month,
-                Año = hoy.Year,
+                Mes = ahoraPeru.Month,
+                Año = ahoraPeru.Year,
                 TotalVentas = ventasMes.Count,
                 MontoTotal = ventasMes.Sum(v => v.Total)
             };
