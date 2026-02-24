@@ -18,6 +18,7 @@ public class HomeController : Controller
         _logger = logger;
         _configuration = configuration;
         var apiUrl = configuration["ApiBaseUrl"] ?? "https://ferreteriaapp-production.up.railway.app/api/";
+        if (!apiUrl.EndsWith("/")) apiUrl += "/";
         _httpClient = new HttpClient();
         _httpClient.BaseAddress = new Uri(apiUrl);
     }
@@ -27,7 +28,7 @@ public class HomeController : Controller
         var apiBase = _configuration["ApiBaseUrl"]?.TrimEnd('/')
                           ?? "https://ferreteriaapp-production.up.railway.app/api";
         ViewBag.ApiBaseUrl = apiBase;
-        
+
         try
         {
             var diaResp = await _httpClient.GetAsync("Ventas/resumen-diario");
@@ -43,7 +44,7 @@ public class HomeController : Controller
             ViewBag.IngresosHoy = dia.GetProperty("montoTotal").GetDecimal().ToString("0.00");
             ViewBag.VentasMes = mes.GetProperty("totalVentas").GetInt32();
             ViewBag.IngresosMes = mes.GetProperty("montoTotal").GetDecimal().ToString("0.00");
-            ViewBag.MesActual = System.Globalization.CultureInfo.GetCultureInfo("es-PE")
+            ViewBag.MesActual = System.Globalization.CultureInfo("es-PE")
                 .DateTimeFormat.GetMonthName(DateTime.Now.Month);
         }
         catch
