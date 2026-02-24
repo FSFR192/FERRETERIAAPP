@@ -29,7 +29,7 @@ namespace FerreteriaAPI.Controllers
             {
                 var venta = new Venta
                 {
-                    Fecha = DateTime.UtcNow.AddHours(-5), // Ajuste a hora local (UTC-5)
+                    Fecha = DateTime.UtcNow,
                     Total = 0,
                     Cliente = ventaDto.Cliente
                 };
