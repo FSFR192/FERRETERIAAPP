@@ -43,7 +43,7 @@ public class HomeController : Controller
             ViewBag.IngresosHoy = dia.GetProperty("montoTotal").GetDecimal().ToString("0.00");
             ViewBag.VentasMes = mes.GetProperty("totalVentas").GetInt32();
             ViewBag.IngresosMes = mes.GetProperty("montoTotal").GetDecimal().ToString("0.00");
-            ViewBag.MesActual = System.Globalization.CultureInfo.CurrentCulture
+            ViewBag.MesActual = System.Globalization.CultureInfo.GetCultureInfo("es-PE")
                 .DateTimeFormat.GetMonthName(DateTime.Now.Month);
         }
         catch

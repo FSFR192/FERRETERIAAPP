@@ -29,7 +29,7 @@ namespace FerreteriaAPI.Controllers
             {
                 var venta = new Venta
                 {
-                    Fecha = DateTime.Now,
+                    Fecha = DateTime.UtcNow,
                     Total = 0,
                     Cliente = ventaDto.Cliente
                 };
@@ -170,11 +170,12 @@ namespace FerreteriaAPI.Controllers
         [HttpGet("resumen-diario")]
         public async Task<IActionResult> ResumenDia()
         {
+            var ahora = DateTime.UtcNow.AddHours(-5); // Ajuste a hora local (UTC-5)
             var hoy = DateTime.Today;
             var mañana = hoy.AddDays(1);
 
             var ventasHoy = await _context.Ventas
-                .Where(v => v.Fecha >= hoy && v.Fecha < mañana)
+                .Where(v => v.Fecha.AddHours(-5) >= hoy && v.Fecha.AddHours(-5) < mañana)
                 .ToListAsync();
 
             var resumen = new ResumenDiaDto
@@ -206,12 +207,13 @@ namespace FerreteriaAPI.Controllers
         [HttpGet("Resumen-mensual")]
         public async Task<IActionResult> ResumenMes()
         {
+            var ahora = DateTime.UtcNow.AddHours(-5); // Ajuste a hora local (UTC-5)    
             var hoy = DateTime.Today;
             var inicioMes = new DateTime(hoy.Year, hoy.Month, 1);
             var siguienteMes = inicioMes.AddMonths(1);
 
             var ventasMes = await _context.Ventas
-                .Where(v => v.Fecha >= inicioMes && v.Fecha < siguienteMes)
+                .Where(v => v.Fecha.AddHours(-5) >= inicioMes && v.Fecha.AddHours(-5) < siguienteMes)
                 .ToListAsync();
 
             var resultado = new
