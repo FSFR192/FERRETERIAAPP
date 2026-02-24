@@ -171,11 +171,11 @@ namespace FerreteriaAPI.Controllers
         public async Task<IActionResult> ResumenDia()
         {
             var ahora = DateTime.UtcNow.AddHours(-5); // Ajuste a hora local (UTC-5)
-            var hoy = DateTime.Today;
+            var hoy = ahora.Date;
             var mañana = hoy.AddDays(1);
 
             var ventasHoy = await _context.Ventas
-                .Where(v => v.Fecha.AddHours(-5) >= hoy && v.Fecha.AddHours(-5) < mañana)
+                .Where(v => v.Fecha >= hoy && v.Fecha < mañana)
                 .ToListAsync();
 
             var resumen = new ResumenDiaDto

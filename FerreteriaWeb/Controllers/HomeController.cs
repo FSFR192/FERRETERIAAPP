@@ -53,7 +53,8 @@ public class HomeController : Controller
             ViewBag.IngresosHoy = "0.00";
             ViewBag.VentasMes = 0;
             ViewBag.IngresosMes = "0.00";
-            ViewBag.MesActual = DateTime.Now.ToString("MMMM");
+            ViewBag.MesActual = new System.Globalization.CultureInfo("es-PE")
+             .DateTimeFormat.GetMonthName(DateTime.Now.Month);
         }
 
         return View();
