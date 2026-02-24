@@ -227,21 +227,30 @@ namespace FerreteriaAPI.Controllers
             return Ok(resultado);
         }
 
-        [HttpGet("dasboard")]
+        [HttpGet("dashboard")]
         public async Task<IActionResult> Dashboard()
         {
-            var hoy = DateTime.Today;
-            var mañana = hoy.AddDays(1);
+            var tz = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
 
-            var inicioMes = new DateTime(hoy.Year, hoy.Month, 1);
-            var siguienteMes = inicioMes.AddMonths(1);
+            // Hora actual en Perú
+            var ahoraPeru = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
+
+            // Día actual en Perú
+            var inicioDiaPeru = new DateTime(ahoraPeru.Year, ahoraPeru.Month, ahoraPeru.Day, 0, 0, 0);
+            var inicioDiaUtc = TimeZoneInfo.ConvertTimeToUtc(inicioDiaPeru, tz);
+            var finDiaUtc = inicioDiaUtc.AddDays(1);
+
+            // Inicio de mes Perú
+            var inicioMesPeru = new DateTime(ahoraPeru.Year, ahoraPeru.Month, 1);
+            var inicioMesUtc = TimeZoneInfo.ConvertTimeToUtc(inicioMesPeru, tz);
+            var finMesUtc = inicioMesUtc.AddMonths(1);
 
             var ventasHoy = await _context.Ventas
-                .Where(v => v.Fecha >= hoy && v.Fecha < mañana)
+                .Where(v => v.Fecha >= inicioDiaUtc && v.Fecha < finDiaUtc)
                 .ToListAsync();
 
             var ventasMes = await _context.Ventas
-                .Where(v => v.Fecha >= inicioMes && v.Fecha < siguienteMes)
+                .Where(v => v.Fecha >= inicioMesUtc && v.Fecha < finMesUtc)
                 .ToListAsync();
 
             var dashboard = new DashboardDto
@@ -250,12 +259,12 @@ namespace FerreteriaAPI.Controllers
                 IngresosHoy = ventasHoy.Sum(v => v.Total),
                 VentasMes = ventasMes.Count,
                 IngresosMes = ventasMes.Sum(v => v.Total),
-                ProductosStockBajo = await _context.Productos.CountAsync(p => p.Stock <= p.StockMinimo)
+                ProductosStockBajo = await _context.Productos
+                    .CountAsync(p => p.Stock <= p.StockMinimo)
             };
 
             return Ok(dashboard);
         }
-
         [HttpGet("exportar")]
         public async Task<IActionResult> ExportarVentas(int Mes, int Año)
         {
