@@ -1,157 +1,136 @@
-🏪 Sistema de Gestión de Ferretería JL
+# Sistema de Gestión de Ferretería JL
 
-Sistema completo de gestión comercial para ferretería desarrollado con ASP.NET Core 8, compuesto por:
+Sistema completo de gestión comercial desarrollado con **ASP.NET Core 8**, compuesto por una API REST y una aplicación Web MVC conectadas entre sí.
 
-🔹 API REST (FerreteriaAPI)
+---
 
-🔹 Aplicación Web MVC (FerreteriaWeb)
+## Arquitectura del Proyecto
 
-🔹 Autenticación con Identity
 
-🔹 Control de stock
-
-🔹 Gestión de ventas
-
-🔹 Dashboard y reportes
-
-🔹 Exportación a Excel
-
-🏗️ Arquitectura del Proyecto
 FERRETERIAAPP
 │
-├── FerreteriaAPI      → Web API (Backend principal)
-└── FerreteriaWeb      → Aplicación Web MVC (Frontend + Auth)
-🔹 1️⃣ FerreteriaAPI (Backend)
+├── FerreteriaAPI → Web API (Backend principal)
+└── FerreteriaWeb → Aplicación Web MVC (Frontend + Autenticación)
 
-API REST construida con:
 
-ASP.NET Core 8
+---
 
-Entity Framework Core
+## Tecnologías Utilizadas
 
-MySQL (Pomelo)
+### Backend (FerreteriaAPI)
 
-ClosedXML (Exportación Excel)
+- ASP.NET Core 8
+- Entity Framework Core
+- MySQL (Pomelo)
+- ClosedXML (Exportación Excel)
+- Swagger
 
-Swagger
+### Frontend (FerreteriaWeb)
 
-📦 Funcionalidades API
-Productos
+- ASP.NET Core MVC
+- Bootstrap 5
+- jQuery
+- ASP.NET Core Identity
+- SQLite (Base de datos de usuarios)
 
-CRUD completo
+---
 
-Control de stock
+## Funcionalidades Principales
 
-Stock mínimo
+### Gestión de Productos
 
-Detección de productos con bajo stock
+- CRUD completo
+- Control de stock
+- Stock mínimo configurable
+- Detección automática de productos con bajo stock
 
-Ventas
+### Gestión de Ventas
 
-Registro de venta con múltiples productos
+- Registro de ventas con múltiples productos
+- Validación de stock antes de vender
+- Descuento automático de inventario
+- Cálculo automático de subtotal y total
+- Conservación del nombre del producto aunque sea eliminado
 
-Descuento automático de stock
+### Reportes y Dashboard
 
-Cálculo automático de subtotal y total
+- Reporte por rango de fechas
+- Resumen diario
+- Resumen mensual
+- Dashboard general
+- Exportación mensual a Excel
 
-Snapshot del nombre del producto (aunque sea eliminado)
+---
 
-Reportes
+## Endpoints API
 
-Reporte por rango de fechas
+### Ventas
 
-Resumen diario
 
-Resumen mensual
+POST /api/Ventas
+GET /api/Ventas
+GET /api/Ventas/{id}
+GET /api/Ventas/reporte
+GET /api/Ventas/resumen-diario
+GET /api/Ventas/resumen-mensual
+GET /api/Ventas/dashboard
+GET /api/Ventas/exportar?Mes=MM&Año=YYYY
 
-Dashboard general
 
-Exportación mensual a Excel
+### Productos
 
-📡 Endpoints principales
-🛒 Ventas
-POST   /api/Ventas
-GET    /api/Ventas
-GET    /api/Ventas/{id}
-GET    /api/Ventas/reporte
-GET    /api/Ventas/resumen-diario
-GET    /api/Ventas/resumen-mensual
-GET    /api/Ventas/dashboard
-GET    /api/Ventas/exportar?Mes=MM&Año=YYYY
-📦 Productos
-GET    /api/Productos
-POST   /api/Productos
-PUT    /api/Productos/{id}
+
+GET /api/Productos
+POST /api/Productos
+PUT /api/Productos/{id}
 DELETE /api/Productos/{id}
-🔹 2️⃣ FerreteriaWeb (Frontend MVC)
 
-Aplicación MVC conectada a la API.
 
-Incluye:
+---
 
-Login de usuarios
+## Base de Datos
 
-Gestión de productos
+### API
+- Motor: MySQL
+- ORM: Entity Framework Core
+- Migraciones incluidas
 
-Registro de ventas
+### Web
+- Motor: SQLite
+- Uso exclusivo para autenticación (Identity)
 
-Visualización de boleta
+---
 
-Layout con Bootstrap
+## Instalación
 
-Validaciones con jQuery
+### Requisitos
 
-Base de datos propia para usuarios:
+- .NET 8 SDK
+- MySQL Server
+- Visual Studio 2022 o VS Code
 
-SQLite (ferreteriaUsers.db)
+---
 
-ASP.NET Core Identity
+### 1. Configurar conexión a la base de datos (API)
 
-🗃️ Base de Datos
-📌 API
+Editar `FerreteriaAPI/appsettings.json`:
 
-Motor: MySQL
-
-ORM: Entity Framework Core
-
-Migraciones incluidas
-
-📌 Web
-
-Motor: SQLite
-
-Uso exclusivo para autenticación (Identity)
-
-⚙️ Instalación
-🔹 Requisitos
-
-.NET 8 SDK
-
-MySQL Server
-
-Visual Studio 2022 o VS Code
-
-🔹 1️⃣ Configurar Base de Datos API
-
-Editar FerreteriaAPI/appsettings.json:
-
+```json
 "ConnectionStrings": {
   "DefaultConnection": "server=localhost;database=FerreteriaDB;user=root;password=TU_PASSWORD;"
 }
-
-Ejecutar migraciones:
-
-dotnet ef database update
-🔹 2️⃣ Ejecutar API
+2. Ejecutar migraciones
 
 Desde la carpeta FerreteriaAPI:
 
+dotnet ef database update
+3. Ejecutar la API
 dotnet run
 
 Swagger disponible en:
 
 https://localhost:xxxx/swagger
-🔹 3️⃣ Ejecutar Web
+4. Ejecutar la aplicación Web
 
 Desde la carpeta FerreteriaWeb:
 
@@ -160,40 +139,21 @@ dotnet run
 Abrir en:
 
 https://localhost:xxxx
-📊 Funcionalidades Destacadas
-🔒 Autenticación
+Características Técnicas
 
-Login con Identity
+Uso de DTOs para transferencia de datos
 
-Base de datos separada para usuarios
+Uso de transacciones en registro de ventas
 
-📦 Control de Stock
+Programación asíncrona (async/await)
 
-No permite vender si no hay stock suficiente
+Separación de capas
 
-Alerta de productos con stock bajo
+Snapshot del nombre del producto para mantener historial
 
-🧾 Snapshot de Productos
+Validaciones de negocio en backend
 
-Cuando se realiza una venta:
-
-Se guarda el nombre del producto en DetalleVenta
-
-Permite conservar historial aunque el producto sea eliminado
-
-📈 Dashboard
-
-Ventas del día
-
-Ingresos del día
-
-Ventas del mes
-
-Ingresos del mes
-
-Productos con bajo stock
-
-📥 Exportación Excel
+Exportación a Excel
 
 Genera archivo:
 
@@ -203,79 +163,28 @@ Incluye:
 
 Fecha
 
-N° Venta
+Número de venta
 
 Producto
 
 Cantidad
 
-Precio Unitario
+Precio unitario
 
-Total línea
+Total por línea
 
-Total general
+Total general del mes
 
-🧠 Buenas Prácticas Implementadas
+Estado del Proyecto
 
-Uso de DTOs
+Proyecto completamente funcional:
 
-Uso de transacciones en ventas
+API operativa
 
-Async/Await en toda la API
+Frontend conectado
 
-Separación de capas
+Dashboard implementado
 
-Snapshot para integridad histórica
+Exportación a Excel
 
-Validaciones de stock
-
-Migraciones versionadas
-
-Arquitectura limpia
-
-🗂️ Estructura Técnica API
-Controllers/
-Data/
-DTOs/
-Models/
-Migrations/
-🗂️ Estructura Técnica Web
-Controllers/
-Models/
-Views/
-Data/
-wwwroot/
-🚀 Tecnologías Utilizadas
-
-.NET 8
-
-ASP.NET Core Web API
-
-ASP.NET Core MVC
-
-Entity Framework Core
-
-MySQL
-
-SQLite
-
-ASP.NET Identity
-
-Bootstrap 5
-
-jQuery
-
-ClosedXML
-
-📌 Estado del Proyecto
-
-✅ Sistema funcional
-✅ API completamente operativa
-✅ Frontend MVC conectado
-✅ Exportación Excel
-✅ Dashboard
-✅ Autenticación
-
-👨‍💻 Autor
-
-Proyecto desarrollado como sistema de gestión comercial para Ferretería JL.
+Autenticación con Identity
